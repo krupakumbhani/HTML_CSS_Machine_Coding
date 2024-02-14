@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fetchwithtimeout</title>
+  </head>
+  <body>
+    <h2>
+      create a fetch function with timeout, that will abort the network request
+      if it is not fulfilled in the given duration.
+    </h2>
+    <p>
+      It is an important method that you can use to handle high-latency
+      applications.
+    </p>
+
+    <script>
+        function fetchWithTimeout(url, timeout) {
+          const controller = new AbortController();
+          const signal = controller.signal;
+    
+          // Initiating the fetch request with the signal
+          fetch(url, { signal })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok.');
+              }
+              return response.json();
+            })
+            .then(data => console.log(data))
+            .catch(error => {
+              if (error.name === 'AbortError') {
+                console.log('Request aborted due to timeout');
+              } else {
+                console.error(error.message);
+              }
+            });
+    
+          // Setting a timeout to abort the request
+          setTimeout(() => {
+            controller.abort();
+            console.log('Request aborted due to timeout');
+          }, timeout);
+        }
+    
+        // Calling fetchWithTimeout with a URL and timeout duration
+        fetchWithTimeout('https://dummy.restapiexample.com/api/v1/employees', 5000);
+      </script>
+  </body>
+</html>
