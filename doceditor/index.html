@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document editor</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h3>Document editor</h3>
+    <hr />
+
+    <div class="container d-flex justify-content-between">
+      <div class="filecontainer d-flex">
+        <div class="dropdown">
+          <button
+            class="btn btn-primary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            File
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+              <a class="dropdown-item" href="#" onclick="handleNew()">New</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" onclick="handleSave()">Save</a>
+            </li>
+          </ul>
+        </div>
+
+        <input type="text" value="untitled" id="filename" />
+      </div>
+      <div class="controls">
+        <button class="btn btn-secondary fw-bold" onclick="toggleChecklist()">Toggle Checklist</button>
+        <button class="btn btn-secondary fw-bold" onclick="handleBold()">
+          B
+        </button>
+        <button class="btn btn-secondary fst-italic" onclick="handleItalic()">
+          I
+        </button>
+        <button
+          class="btn btn-secondary text-decoration-underline"
+          onclick="handleUnderline()"
+        >
+          U
+        </button>
+        <button
+          class="btn btn-secondary text-decoration-line-through"
+          onclick="handleLinethrough()"
+        >
+          abc
+        </button>
+        <input type="color" onchange="handleColor(event)" />
+        <select id="fontFamilySelect" onchange="handleFontFamilyChange()">
+          <option value="Arial">Arial</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <!-- Add more font family options as needed -->
+        </select>
+      </div>
+    </div>
+    <div class="container">
+      <div class="textarea" contenteditable="true" spellcheck="false">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos quam,
+        voluptatem eaque harum nulla itaque numquam, corrupti omnis,
+        perspiciatis eos aut deleniti eum pariatur tenetur velit rerum incidunt
+        ut iusto aliquam ducimus eius accusamus? Debitis, magnam quod deserunt
+        laboriosam facere quisquam similique voluptatem sint. Inventore
+        quibusdam laborum dignissimos sunt molestias, libero totam.
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="script.js"></script>
+    <script>
+      const textcontent = document.querySelector(".textarea");
+      const file = document.querySelector("#filename");
+
+      function handleBold() {
+        document.execCommand("bold");
+      }
+      function handleItalic() {
+        document.execCommand("italic");
+      }
+      function handleUnderline() {
+        document.execCommand("underline");
+      }
+      function handleLinethrough() {
+        document.execCommand("strikeThrough");
+      }
+      function handleColor(event) {
+        // baki
+        document.execCommand("forecolor", false, event.target.value.slice(1));
+      }
+      function handleNew() {
+        textcontent.innerHTML = "";
+      }
+      function handleSave() {
+        alert("save");
+        const a = document.createElement("a");
+        const blob = new Blob([textcontent.innerText]);
+        const dataurl = URL.createObjectURL(blob);
+        a.href = dataurl;
+        a.download = file.value + ".txt";
+        a.click();
+      }
+      function handleFontFamilyChange() {
+        var fontFamily = document.getElementById("fontFamilySelect").value;
+        document.execCommand("fontName", false, fontFamily);
+      }
+      function toggleChecklist() {
+    document.execCommand('insertUnorderedList', false, null);
+}
+
+    </script>
+  </body>
+</html>
