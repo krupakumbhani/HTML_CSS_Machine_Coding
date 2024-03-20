@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document editor</title>
     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -20,7 +27,7 @@
       <div class="filecontainer d-flex">
         <div class="dropdown">
           <button
-            class="btn btn-primary dropdown-toggle"
+            class="btn btn-primary dropdown-toggle me-1"
             type="button"
             id="dropdownMenuButton1"
             data-bs-toggle="dropdown"
@@ -30,10 +37,63 @@
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li>
-              <a class="dropdown-item" href="#" onclick="handleNew()">New</a>
+              <a class="dropdown-item" href="#" onclick="handleNew()"
+                ><i class="fa-regular fa-file-lines"></i> New</a
+              >
             </li>
             <li>
-              <a class="dropdown-item" href="#" onclick="handleSave()">Save</a>
+              <a class="dropdown-item" href="#" onclick="handleSave()"
+                ><i class="fa-solid fa-download"></i> Save</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-primary dropdown-toggle me-1"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Edit
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+              <a class="dropdown-item" href="#" onclick="handleundo()"
+                ><i class="fa-solid fa-rotate-left"></i> Undo</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" onclick="handleredo()"
+                ><i class="fa-solid fa-rotate-right"></i> Redo</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" onclick="handlecut()"
+                ><i class="fa-solid fa-scissors"></i> Cut</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" onclick="handlecopy()"
+                ><i class="fa-regular fa-copy"></i> Copy</a
+              >
+            </li>
+            <!-- baki -->
+            <li>
+              <a class="dropdown-item" href="#" onclick="handlepaste()"
+                ><i class="fa-regular fa-paste"></i> Paste</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" onclick="handleSelectall()"
+                ><i class="fa-solid fa-vector-square"></i> Select All</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" onclick="handledelete()"
+                ><i class="fa-regular fa-trash-can"></i> Delete</a
+              >
             </li>
           </ul>
         </div>
@@ -41,7 +101,40 @@
         <input type="text" value="untitled" id="filename" />
       </div>
       <div class="controls">
-        <button class="btn btn-secondary fw-bold" onclick="toggleChecklist()">Toggle Checklist</button>
+        <!-- table -->
+        <label for="rows">rows:</label>
+        <input type="number" id="rows" min="1" value="3" />
+        <label for="cols">columns:</label>
+        <input type="number" id="cols" min="1" value="3" />
+        <button class="btn btn-secondary fw-bold" onclick="createEmptyTable()">
+          <i class="fa-solid fa-table"></i>
+        </button>
+
+        <!-- image -->
+        <button class="btn btn-secondary fw-bold" onclick="insertimage()">
+          <i class="fa-regular fa-image"></i>
+        </button>
+
+        <!-- justify content -->
+        <button class="btn btn-secondary fw-bold" onclick="alignleft()">
+          <i class="fa-solid fa-align-left"></i>
+        </button>
+        <button class="btn btn-secondary fw-bold" onclick="aligncenter()">
+          <i class="fa-solid fa-align-center"></i>
+        </button>
+        <button class="btn btn-secondary fw-bold" onclick="alignright()">
+          <i class="fa-solid fa-align-right"></i>
+        </button>
+
+        <!-- list content -->
+        <button class="btn btn-secondary fw-bold" onclick="toggleNumlist()">
+          <i class="fa-solid fa-list-ol"></i>
+        </button>
+        <button class="btn btn-secondary fw-bold" onclick="toggleChecklist()">
+          <i class="fa-solid fa-list"></i>
+        </button>
+
+        <!-- text control -->
         <button class="btn btn-secondary fw-bold" onclick="handleBold()">
           B
         </button>
@@ -65,10 +158,39 @@
           <option value="Arial">Arial</option>
           <option value="Verdana">Verdana</option>
           <option value="Times New Roman">Times New Roman</option>
-          <!-- Add more font family options as needed -->
         </select>
+        <button class="btn btn-secondary" onclick="createlink()"><i class="fa-solid fa-link"></i></button>
+        <!-- font sizing -->
+        <div class="d-flex">
+        <button class="btn" onclick="decreaseFontSize()">-</button>
+        <div class="dropdown">
+            <input onchange="fontchange(event)" type="number" value="11" min="8" max="72" class="dropdown-toggle" id="fontSizeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            </input>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(8)">8</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(9)">9</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(10)">10</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(11)">11</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(12)">12</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(14)">14</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(16)">16</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(18)">18</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(20)">20</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(22)">22</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(24)">24</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(28)">28</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(36)">36</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(48)">48</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setFontSize(72)">72</a></li>
+            </ul>
+          </div>
+        <button class="btn" onclick="increaseFontSize()">+</button>
+    </div>
+
+    
       </div>
     </div>
+
     <div class="container">
       <div class="textarea" contenteditable="true" spellcheck="false">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos quam,
@@ -86,46 +208,5 @@
       crossorigin="anonymous"
     ></script>
     <script src="script.js"></script>
-    <script>
-      const textcontent = document.querySelector(".textarea");
-      const file = document.querySelector("#filename");
-
-      function handleBold() {
-        document.execCommand("bold");
-      }
-      function handleItalic() {
-        document.execCommand("italic");
-      }
-      function handleUnderline() {
-        document.execCommand("underline");
-      }
-      function handleLinethrough() {
-        document.execCommand("strikeThrough");
-      }
-      function handleColor(event) {
-        // baki
-        document.execCommand("forecolor", false, event.target.value.slice(1));
-      }
-      function handleNew() {
-        textcontent.innerHTML = "";
-      }
-      function handleSave() {
-        alert("save");
-        const a = document.createElement("a");
-        const blob = new Blob([textcontent.innerText]);
-        const dataurl = URL.createObjectURL(blob);
-        a.href = dataurl;
-        a.download = file.value + ".txt";
-        a.click();
-      }
-      function handleFontFamilyChange() {
-        var fontFamily = document.getElementById("fontFamilySelect").value;
-        document.execCommand("fontName", false, fontFamily);
-      }
-      function toggleChecklist() {
-    document.execCommand('insertUnorderedList', false, null);
-}
-
-    </script>
   </body>
 </html>
